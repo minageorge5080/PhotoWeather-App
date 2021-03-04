@@ -5,4 +5,7 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(apiService: ApiService) {
 
+    fun test(){
+
+    }
 }

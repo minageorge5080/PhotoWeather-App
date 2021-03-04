@@ -23,7 +23,6 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
-    @Singleton
     fun provideInterceptor(): Interceptor {
         return Interceptor.invoke { chain ->
             val url = chain.request().url.newBuilder()
@@ -40,7 +39,6 @@ class NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .apply {
@@ -60,7 +58,6 @@ class NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread()))
@@ -71,13 +68,11 @@ class NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
     @Provides
-    @Singleton
     fun provideNetworkManagerHelper(apiService: ApiService): NetworkManager {
         return NetworkManager(apiService)
     }

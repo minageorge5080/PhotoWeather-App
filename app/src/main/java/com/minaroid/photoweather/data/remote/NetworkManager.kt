@@ -6,7 +6,7 @@ import io.reactivex.Single
 import java.util.HashMap
 import javax.inject.Inject
 
-class NetworkManager @Inject constructor(val apiService: ApiService) {
+class NetworkManager @Inject constructor(private val apiService: ApiService) {
 
     private val headers: HashMap<String, String> = HashMap()
     private val gson = GsonBuilder().serializeNulls().create()
