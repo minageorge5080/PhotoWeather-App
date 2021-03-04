@@ -8,8 +8,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PhotoWeatherApp">
-        <activity android:name=".MainActivity">
+        android:fullBackupContent="false"
+        android:theme="@style/Theme.PhotoWeather">
+
+
+        <activity
+            android:name=".ui.home.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
