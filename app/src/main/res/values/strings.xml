@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Photo Weather</string>
+
+    <string name="msg_internal_error">An error occur try again later</string>
+    <string name="msg_connection_error">please check your connection</string>
+    <string name="file_picker_label">Photos</string>
+
 </resources>

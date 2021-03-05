@@ -18,7 +18,7 @@
 
     </style>
 
-    <style name="ToolbarTextTheme" parent="android:Widget.TextView">
+    <style name="ToolbarTheme" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/textSizeHeadline5</item>
         <item name="android:textColor">@color/black</item>
     </style>
@@ -32,4 +32,23 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="FilePickerTheme" parent="LibAppTheme">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="CheckboxStyle" parent="Theme.PhotoWeather">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="SmoothCheckBoxStyle">
+        <item name="color_checked">@color/white</item>
+        <item name="color_unchecked">@android:color/white</item>
+        <item name="color_unchecked_stroke">@color/white</item>
+        <item name="color_tick">@android:color/white</item>
+    </style>
+
 </resources>

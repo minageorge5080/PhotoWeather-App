@@ -35,7 +35,7 @@ class CenteredTitleToolbar(context: Context, attrs: AttributeSet) : Toolbar(cont
         super.onLayout(changed, left, top, right, bottom)
         _titleTextView?.let {
             title = _currentTitle
-            TextViewCompat.setTextAppearance(it, R.style.ToolbarTextTheme)
+            TextViewCompat.setTextAppearance(it, R.style.ToolbarTheme)
         }
 
         if (_centerTitle) {

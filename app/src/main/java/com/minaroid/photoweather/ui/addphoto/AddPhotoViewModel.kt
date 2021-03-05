@@ -1,4 +1,4 @@
-package com.minaroid.photoweather.ui.home
+package com.minaroid.photoweather.ui.addphoto
 
 import android.util.Log
 import com.minaroid.photoweather.data.repository.WeatherRepository
@@ -15,7 +15,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : BaseViewModel() {
+class AddPhotoViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : BaseViewModel() {
 
     fun getWeatherData(){
         addToDisposable(weatherRepository.getCurrentWeather(29.9407001,31.2806502)

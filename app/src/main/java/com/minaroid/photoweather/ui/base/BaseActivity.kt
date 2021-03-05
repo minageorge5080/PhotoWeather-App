@@ -11,11 +11,15 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var uiHelper: UiHelper
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected abstract fun initViews()
     protected abstract fun initViewModel()
     protected abstract fun loadData()
+
+    fun addToDisposable(disposable: Disposable) {
+        this.disposable.add(disposable)
+    }
 
     fun subscribeToViewModelObservables(viewModel: BaseViewModel) {
         viewModel.errorMsgLiveData.observe(this, Observer {
@@ -54,6 +62,11 @@ abstract class BaseActivity : AppCompatActivity() {
                 else uiHelper.hideLoading()
             }
         })
+    }
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
     }
 
 }

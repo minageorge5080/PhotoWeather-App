@@ -1,5 +1,4 @@
-package com.minaroid.photoweather.ui.home
-
+package com.minaroid.photoweather.ui.addphoto
 
 import android.Manifest
 import android.app.Activity
@@ -9,9 +8,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.minaroid.photoweather.R
-import com.minaroid.photoweather.data.models.image.ImageModel
-import com.minaroid.photoweather.databinding.ActivityHomeBinding
-import com.minaroid.photoweather.ui.addphoto.AddPhotoActivity
+import com.minaroid.photoweather.databinding.ActivityAddPhotoBinding
 import com.minaroid.photoweather.ui.base.BaseActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,42 +16,40 @@ import droidninja.filepicker.FilePickerBuilder
 import droidninja.filepicker.FilePickerConst
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity() {
+class AddPhotoActivity : BaseActivity() {
 
-    @Inject
-    lateinit var imagesAdapter: ImagesAdapter
-
-    private val viewModel: HomeViewModel by viewModels()
-    private lateinit var binding: ActivityHomeBinding
+    private val viewModel: AddPhotoViewModel by viewModels()
+    private lateinit var binding: ActivityAddPhotoBinding
     private val pickerSelectedPaths: MutableList<Uri> = ArrayList()
-
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                uiHelper.showSuccessMsg("DONE")
-            }
-        }
+    private val disposable = CompositeDisposable()
 
     override fun getLayoutView(): View {
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityAddPhotoBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun initViews() {
-        setSupportActionBar(binding.toolbar)
-        binding.imagesRecycler.adapter = imagesAdapter
-        binding.addNewBtn.setOnClickListener { openImagePicker() }
+
     }
 
     override fun initViewModel() {
-        subscribeToViewModelObservables(viewModel)
+        openImagePicker()
+    }
+
+    override fun loadData() {
+
     }
 
     private fun openImagePicker() {
+        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    uiHelper.showSuccessMsg("DONE")
+                }
+            }
 
-        addToDisposable(
+        disposable.add(
             RxPermissions(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .subscribe({
@@ -75,7 +70,9 @@ class HomeActivity : BaseActivity() {
 
     }
 
-    override fun loadData() {
-//        viewModel.getWeatherData()
+    companion object {
+
+        private const val REQUEST_CODE_PICKER = 130
+
     }
 }
