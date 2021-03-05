@@ -3,24 +3,17 @@ package com.minaroid.photoweather.ui.addphoto
 import android.Manifest
 import android.location.Location
 import android.net.Uri
-import android.provider.MediaStore
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.drawToBitmap
 import androidx.lifecycle.Observer
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.databinding.ActivityAddPhotoBinding
-import com.minaroid.photoweather.helpers.FileHelper
 import com.minaroid.photoweather.helpers.LocationManagerCallBack
-import com.minaroid.photoweather.helpers.timber.LocationManager
+import com.minaroid.photoweather.helpers.LocationManager
 import com.minaroid.photoweather.ui.base.BaseActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.util.*
 
 @AndroidEntryPoint
 class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
@@ -66,7 +59,11 @@ class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
                 )
                 .subscribe({
                     if (it) {
-                        locationManager = LocationManager(this@AddPhotoActivity, this)
+                        locationManager =
+                            LocationManager(
+                                this@AddPhotoActivity,
+                                this
+                            )
                         locationManager?.startLocationUpdates()
                         uiHelper.showLoading()
                     } else {
@@ -83,7 +80,7 @@ class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
         }
     }
 
-    fun onSaveClicked(view: View) {
+    fun onSaveClicked() {
         viewModel.saveImage(binding.imageContainer)
     }
 

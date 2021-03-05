@@ -3,26 +3,64 @@ package com.minaroid.photoweather.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.data.models.image.ImageModel
 import com.minaroid.photoweather.databinding.ItemImageBinding
-import com.minaroid.photoweather.ui.base.BaseAdapter
-import com.minaroid.photoweather.ui.base.BaseBindingViewHolder
 import javax.inject.Inject
 
-class ImagesAdapter @Inject constructor() : BaseAdapter<ImageModel, ImagesAdapter.ImageViewHolder>() {
+class ImagesAdapter @Inject constructor() :
+    ListAdapter<ImageModel, ImagesAdapter.ImageViewHolder>(DataDiffCallback()) {
 
-    override fun getViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        return  ImageViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_image, parent, false))
+    var onDeleteClickedListener: ((item: ImageModel) -> Unit)? = null
+    var onShareClickedListener: ((item: ImageModel) -> Unit)? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+        return ImageViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.item_image,
+                parent,
+                false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+        holder.bindItem(getItem(position))
     }
 
     inner class ImageViewHolder(private val imageBinding: ItemImageBinding) :
-        BaseBindingViewHolder<ImageModel>(imageBinding) {
+        RecyclerView.ViewHolder(imageBinding.root) {
+        lateinit var image: ImageModel
 
-        override fun bindItem(item: ImageModel?, position: Int) {
+        init {
 
+            imageBinding.delete.setOnClickListener {
+                onDeleteClickedListener?.invoke(image)
+            }
+
+            imageBinding.share.setOnClickListener {
+                onShareClickedListener?.invoke(image)
+            }
         }
 
+        fun bindItem(item: ImageModel) {
+            this.image = item
+            imageBinding.imageModel = item
+        }
+    }
+
+    class DataDiffCallback : DiffUtil.ItemCallback<ImageModel>() {
+        override fun areItemsTheSame(oldItem: ImageModel, newItem: ImageModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: ImageModel, newItem: ImageModel): Boolean {
+            return oldItem == newItem
+        }
     }
 
 

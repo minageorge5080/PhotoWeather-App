@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="imageModel"
+            type="com.minaroid.photoweather.data.models.image.ImageModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_marginTop="@dimen/margin_micro"
+        android:layout_height="200dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            tools:src="@tools:sample/backgrounds/scenic"/>
+            android:scaleType="centerCrop"
+            app:loadLocalImage="@{imageModel.path}" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:padding="@dimen/padding_micro"
+            app:srcCompat="@drawable/ic_delete"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/shape_image_actions_bg"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/share"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="@dimen/padding_micro"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_share"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_medium"
+            app:layout_constraintTop_toBottomOf="@+id/delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/shape_image_actions_bg"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

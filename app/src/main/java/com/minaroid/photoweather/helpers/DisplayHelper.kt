@@ -9,21 +9,22 @@ import android.view.WindowManager
 
 object DisplayHelper {
 
-    fun getDisplayPixelSize(context: Context): Point {
+    private fun getDisplayPixelSize(context: Context): Point {
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             val display = context.display
             val size = Point()
             display?.getRealSize(size)
-            return size
+            size
         } else {
             val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
             @Suppress("DEPRECATION")
             val display = wm.defaultDisplay
             val size = Point()
             @Suppress("DEPRECATION")
             display.getSize(size)
-            return size
+            size
         }
     }
 

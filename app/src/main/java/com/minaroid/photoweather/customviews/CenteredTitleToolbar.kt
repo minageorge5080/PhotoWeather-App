@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.helpers.DisplayHelper

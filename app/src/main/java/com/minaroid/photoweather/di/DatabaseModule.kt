@@ -1,7 +1,7 @@
 package com.minaroid.photoweather.di
 
 import android.content.Context
-import com.minaroid.photoweather.helpers.ResourcesHelper
+import com.minaroid.photoweather.data.database.PhotoWeatherDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,11 +10,11 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ApplicationModule {
+class DatabaseModule {
 
     @Provides
-    fun provideResourcesHelper(@ApplicationContext context: Context): ResourcesHelper {
-        return ResourcesHelper(context)
+    fun provideDatabase(@ApplicationContext context: Context): PhotoWeatherDB {
+        return PhotoWeatherDB(context)
     }
 
 }

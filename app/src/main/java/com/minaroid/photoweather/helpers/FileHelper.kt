@@ -15,7 +15,8 @@ object FileHelper {
     private const val DIR_NAME = "photoWeather"
 
     fun getAppFolder(context: Context): File {
-        val storageDirectory = context.applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDirectory =
+            context.applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
         val appFolder = File(storageDirectory, DIR_NAME)
 
@@ -43,4 +44,11 @@ object FileHelper {
         return tempFile.absolutePath
     }
 
+    fun deleteImage (path: String): Boolean {
+        val file = File(path)
+        return if (file.isFile) {
+            file.delete()
+        } else
+            false
+    }
 }

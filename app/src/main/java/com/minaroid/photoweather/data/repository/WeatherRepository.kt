@@ -3,7 +3,6 @@ package com.minaroid.photoweather.data.repository
 import com.minaroid.photoweather.data.models.weather.WeatherMapper
 import com.minaroid.photoweather.data.models.weather.WeatherModel
 import com.minaroid.photoweather.data.models.weather.WeatherResponse
-import com.minaroid.photoweather.data.remote.ApiService
 import com.minaroid.photoweather.data.remote.NetworkConstants
 import com.minaroid.photoweather.data.remote.NetworkManager
 import io.reactivex.Single

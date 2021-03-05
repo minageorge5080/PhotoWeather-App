@@ -1,30 +1,40 @@
 package com.minaroid.photoweather.ui.home
 
-import android.util.Log
-import com.minaroid.photoweather.data.repository.WeatherRepository
-import com.minaroid.photoweather.helpers.UiHelper
+import androidx.lifecycle.MutableLiveData
+import com.minaroid.photoweather.data.models.image.ImageModel
+import com.minaroid.photoweather.data.repository.ImagesRepository
+import com.minaroid.photoweather.helpers.FileHelper
 import com.minaroid.photoweather.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val weatherRepository: WeatherRepository) : BaseViewModel() {
+class HomeViewModel @Inject constructor(private val imagesRepository: ImagesRepository) : BaseViewModel() {
 
-    fun getWeatherData(){
-        addToDisposable(weatherRepository.getCurrentWeather(29.9407001,31.2806502)
+    val imagesLiveData = MutableLiveData<List<ImageModel>>()
+
+    init {
+        getAllImages()
+    }
+
+    private fun getAllImages() {
+        addToDisposable(imagesRepository.getAllImages()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ imagesLiveData.value = it }, Timber::e)
+        )
+    }
+
+    fun deleteImage(image: ImageModel) {
+        addToDisposable(imagesRepository.deleteImage(image)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { loadingLiveData.value = true }
             .doFinally { loadingLiveData.value = false }
-            .subscribe({
-                successMsgLiveData.value = it.locationName
-            },this::processError))
+            .subscribe({ FileHelper.deleteImage(image.path) }, Timber::e)
+        )
     }
 }

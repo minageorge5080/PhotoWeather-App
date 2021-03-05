@@ -8,16 +8,17 @@ import android.net.Uri
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import com.minaroid.photoweather.R
-import com.minaroid.photoweather.data.models.image.ImageModel
 import com.minaroid.photoweather.databinding.ActivityHomeBinding
+import com.minaroid.photoweather.helpers.IntentHelper
 import com.minaroid.photoweather.ui.addphoto.AddPhotoActivity
 import com.minaroid.photoweather.ui.base.BaseActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import droidninja.filepicker.FilePickerBuilder
 import droidninja.filepicker.FilePickerConst
-import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -52,16 +53,31 @@ class HomeActivity : BaseActivity() {
 
     override fun initViews() {
         setSupportActionBar(binding.toolbar)
-        binding.imagesRecycler.adapter = imagesAdapter
-        binding.addNewBtn.setOnClickListener { openImagePicker() }
+        initRecyclerView()
     }
 
     override fun initViewModel() {
         subscribeToViewModelObservables(viewModel)
+        viewModel.imagesLiveData.observe(this, Observer {
+            it?.let {
+                binding.emptyView.isVisible = it.isEmpty()
+                imagesAdapter.submitList(it)
+            }
+        })
     }
 
-    private fun openImagePicker() {
+    private fun initRecyclerView() {
+        binding.imagesRecycler.adapter = imagesAdapter
+        imagesAdapter.onDeleteClickedListener = {
+            viewModel.deleteImage(it)
+        }
 
+        imagesAdapter.onShareClickedListener = {
+            IntentHelper.shareImage(this,it.path)
+        }
+    }
+
+    fun openImagePicker() {
         addToDisposable(
             RxPermissions(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
@@ -83,6 +99,13 @@ class HomeActivity : BaseActivity() {
 
     }
 
-    override fun loadData() {
+    override fun onResume() {
+        super.onResume()
+        binding.imagesRecycler.smoothScrollToPosition(0)
     }
+
+    override fun loadData() {
+
+    }
+
 }

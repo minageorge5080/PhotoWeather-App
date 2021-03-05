@@ -46,8 +46,8 @@
                 tools:visibility="visible"
                 android:padding="@dimen/padding_medium"
                 android:visibility="@{weatherModel==null ? View.GONE : View.VISIBLE , default = gone}"
-                android:layout_gravity="bottom"
-                android:background="@drawable/weather_details_bg">
+                android:layout_gravity="top"
+                android:background="@drawable/shape_weather_details_bg">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/address"
@@ -102,7 +102,7 @@
             android:drawablePadding="@dimen/padding_micro"
             android:background="@drawable/save_image_btn_bg"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:drawableEnd="@drawable/next_arrow"
+            android:drawableEnd="@drawable/ic_next_arrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageContainer"/>

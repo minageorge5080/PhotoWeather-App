@@ -5,7 +5,6 @@ import com.hadilq.liveevent.LiveEvent
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.helpers.ResourcesHelper
-import com.minaroid.photoweather.helpers.UiHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.json.JSONObject
@@ -21,6 +20,7 @@ open class BaseViewModel : ViewModel() {
     val errorMsgLiveData: LiveEvent<String> = LiveEvent()
     val successMsgLiveData: LiveEvent<String> = LiveEvent()
     val loadingLiveData: LiveEvent<Boolean> = LiveEvent()
+    val finishScreenLiveData: LiveEvent<Boolean> = LiveEvent()
 
     fun addToDisposable(disposable: Disposable) {
         this.disposable.add(disposable)

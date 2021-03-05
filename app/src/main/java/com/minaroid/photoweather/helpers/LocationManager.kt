@@ -1,12 +1,9 @@
-package com.minaroid.photoweather.helpers.timber
+package com.minaroid.photoweather.helpers
 
 import android.Manifest
 import android.app.Activity
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -14,12 +11,13 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQUIRED
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.minaroid.photoweather.helpers.LocationManagerCallBack
-import java.io.IOException
-import java.util.*
+import timber.log.Timber
 
 
-class LocationManager constructor(private val activity: Activity, private val locationManagerCallBack: LocationManagerCallBack) {
+class LocationManager constructor(
+    private val activity: Activity,
+    private val locationManagerCallBack: LocationManagerCallBack
+) {
 
     companion object Constants {
         const val TAG = "LocationManager"
@@ -78,7 +76,8 @@ class LocationManager constructor(private val activity: Activity, private val lo
 
     private fun setupLocationService() {
         // init location clients.
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity.applicationContext)
+        mFusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(activity.applicationContext)
         mSettingsClient = LocationServices.getSettingsClient(activity.applicationContext)
         // Kick off the process of building the LocationCallback, LocationRequest, and
         // LocationSettingsRequest objects.
@@ -106,10 +105,12 @@ class LocationManager constructor(private val activity: Activity, private val lo
         // inexact. You may not receive updates at all if no location sources are available, or
         // you may receive them slower than requested. You may also receive updates faster than
         // requested if other applications are requesting location at a faster interval.
-        mLocationRequest.interval = UPDATE_INTERVAL_IN_MILLISECONDS
+        mLocationRequest.interval =
+            UPDATE_INTERVAL_IN_MILLISECONDS
         // Sets the fastest rate for active location updates. This interval is exact, and your
         // application will never receive updates faster than this value.
-        mLocationRequest.fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+        mLocationRequest.fastestInterval =
+            FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
@@ -130,53 +131,59 @@ class LocationManager constructor(private val activity: Activity, private val lo
      */
     fun startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
-        mSettingsClient?.checkLocationSettings(mLocationSettingsRequest)
-            ?.addOnSuccessListener(activity) {
-                Log.d(TAG, "All location settings are satisfied.")
-                if (ActivityCompat.checkSelfPermission(
-                        activity,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        activity,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // Check permission but I already check permission before use this class
-                    return@addOnSuccessListener
+        mLocationSettingsRequest?.let { locationRequest ->
+            mSettingsClient?.checkLocationSettings(locationRequest)
+                ?.addOnSuccessListener(activity) {
+                    Timber.tag(TAG).v("All location settings are satisfied.")
+                    if (ActivityCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Check permission but I already check permission before use this class
+                        return@addOnSuccessListener
+                    }
+                    mLocationCallback?.let { callback ->
+                        Looper.myLooper()?.let {
+                            mFusedLocationClient?.requestLocationUpdates(
+                                mLocationRequest,
+                                callback,
+                                it
+                            )
+                        }
+                    }
                 }
-                mFusedLocationClient?.requestLocationUpdates(
-                    mLocationRequest,
-                    mLocationCallback, Looper.myLooper()
-                )
-            }
-            ?.addOnFailureListener(activity) { e ->
-                val statusCode: Int = (e as ApiException).statusCode
-                handleStartLocationFailureCases(e as ResolvableApiException, statusCode)
-            }
+                ?.addOnFailureListener(activity) { e ->
+                    val statusCode: Int = (e as ApiException).statusCode
+                    handleStartLocationFailureCases(e as ResolvableApiException, statusCode)
+                }
+        }
+
     }
 
     private fun handleStartLocationFailureCases(e: ResolvableApiException, statusCode: Int) {
         when (statusCode) {
             RESOLUTION_REQUIRED -> {
-                Log.d(
-                    TAG, "Location settings are not satisfied. Attempting to upgrade " +
-                            "location settings "
-                )
+                Timber.d("Location settings are not satisfied. Attempting to upgrade location settings ")
                 try {
                     // Show the dialog by calling startResolutionForResult(), and check the
                     // result in onActivityResult().
                     e.startResolutionForResult(
-                        activity, REQUEST_CHECK_SETTINGS
+                        activity,
+                        REQUEST_CHECK_SETTINGS
                     )
                 } catch (sie: SendIntentException) {
-                    Log.d(TAG, "PendingIntent unable to execute request.")
+                    Timber.d( "PendingIntent unable to execute request.")
                 }
             }
             LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
                 val errorMessage = "Location settings are inadequate, and cannot be " +
                         "fixed here. Fix in Settings."
-                Log.e(TAG, errorMessage)
+                Timber.e( errorMessage)
             }
             else -> {
             }
@@ -190,9 +197,12 @@ class LocationManager constructor(private val activity: Activity, private val lo
         // It is a good practice to remove location requests when the activity is in a paused or
         // stopped state. Doing so helps battery performance and is especially
         // recommended in applications that request frequent location updates.
-        mFusedLocationClient?.removeLocationUpdates(mLocationCallback)
-        mFusedLocationClient = null
-        mLocationCallback = null
+        mLocationCallback?.let{
+            mFusedLocationClient?.removeLocationUpdates(it)
+            mFusedLocationClient = null
+            mLocationCallback = null
+        }
+
 
     }
 

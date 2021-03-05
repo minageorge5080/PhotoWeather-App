@@ -1,7 +1,6 @@
 package com.minaroid.photoweather.data.remote
 
 import com.google.gson.JsonElement
-import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.*
 

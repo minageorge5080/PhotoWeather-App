@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -46,6 +45,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
 }
 
 dependencies {
@@ -93,6 +93,11 @@ dependencies {
 
     // google play services
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    // room
+    implementation 'androidx.room:room-runtime:2.2.6'
+    implementation 'androidx.room:room-rxjava2:2.2.6'
+    kapt "androidx.room:room-compiler:2.2.6"
 
     // utils
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'

@@ -7,5 +7,7 @@
     <string name="add_photo">Add Photo</string>
     <string name="msg_location_permission">You should enable location permission</string>
     <string name="btn_save_image">Save Image</string>
+    <string name="empty_view_home">You Have no images now \npress add button to start</string>
+    <string name="share_dialog">Share</string>
 
 </resources>

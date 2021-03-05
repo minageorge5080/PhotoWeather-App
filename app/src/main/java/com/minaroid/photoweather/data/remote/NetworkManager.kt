@@ -1,7 +1,6 @@
 package com.minaroid.photoweather.data.remote
 
 import com.google.gson.GsonBuilder
-import io.reactivex.Observable
 import io.reactivex.Single
 import java.util.HashMap
 import javax.inject.Inject
