@@ -12,8 +12,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.databinding.ActivityHomeBinding
-import com.minaroid.photoweather.helpers.IntentHelper
-import com.minaroid.photoweather.ui.addphoto.AddPhotoActivity
+import com.minaroid.photoweather.ui.addImage.AddImageActivity
 import com.minaroid.photoweather.ui.base.BaseActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,8 +37,8 @@ class HomeActivity : BaseActivity() {
                 result.data?.getParcelableArrayListExtra<Uri>(FilePickerConst.KEY_SELECTED_MEDIA)
                     ?.let {
                         if (it.isNotEmpty()) {
-                            val addPhotoIntent = Intent(this, AddPhotoActivity::class.java)
-                            addPhotoIntent.putExtra(AddPhotoActivity.IMAGE_PATH_KEY, it[0])
+                            val addPhotoIntent = Intent(this, AddImageActivity::class.java)
+                            addPhotoIntent.putExtra(AddImageActivity.IMAGE_PATH_KEY, it[0])
                             startActivity(addPhotoIntent)
                         }
                     }
@@ -68,16 +67,9 @@ class HomeActivity : BaseActivity() {
 
     private fun initRecyclerView() {
         binding.imagesRecycler.adapter = imagesAdapter
-        imagesAdapter.onDeleteClickedListener = {
-            viewModel.deleteImage(it)
-        }
-
-        imagesAdapter.onShareClickedListener = {
-            IntentHelper.shareImage(this,it.path)
-        }
     }
 
-    fun openImagePicker() {
+    fun openImagePicker(view: View) {
         addToDisposable(
             RxPermissions(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)

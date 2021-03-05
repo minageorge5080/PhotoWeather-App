@@ -13,7 +13,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/margin_micro"
+        android:layout_marginTop="@dimen/margin_nano"
+        android:layout_marginStart="@dimen/margin_nano_extra"
+        android:layout_marginEnd="@dimen/margin_nano_extra"
         android:layout_height="200dp">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -22,32 +24,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:loadLocalImage="@{imageModel.path}" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:visibility="gone"
-            android:padding="@dimen/padding_micro"
-            app:srcCompat="@drawable/ic_delete"
-            android:layout_marginEnd="@dimen/padding_medium"
-            android:layout_marginTop="@dimen/padding_medium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/shape_image_actions_bg"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/share"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="@dimen/padding_micro"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_share"
-            android:layout_marginEnd="@dimen/padding_medium"
-            android:layout_marginTop="@dimen/padding_medium"
-            app:layout_constraintTop_toBottomOf="@+id/delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/shape_image_actions_bg"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

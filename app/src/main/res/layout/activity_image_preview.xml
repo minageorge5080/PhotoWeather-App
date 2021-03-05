@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="path"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_micro"
+        android:layout_height="match_parent"
+        tools:context=".ui.imagepreview.ImagePreviewActivity">
+
+        <com.minaroid.photoweather.customviews.CenteredTitleToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:centerTitle="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/preview_photo" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:scaleType="fitXY"
+            app:loadLocalImage="@{path}" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="@dimen/padding_micro"
+            android:onClick="onDeleteClicked"
+            app:srcCompat="@drawable/ic_delete"
+            android:layout_marginBottom="@dimen/margin_extra"
+            app:layout_constraintStart_toEndOf="@+id/share"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/padding_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/shape_image_actions_bg"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/share"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="@dimen/padding_micro"
+            android:onClick="onShareClicked"
+            app:srcCompat="@drawable/ic_share"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/padding_medium"
+            app:layout_constraintBottom_toBottomOf="@id/delete"
+            app:layout_constraintEnd_toStartOf="@id/delete"
+            android:background="@drawable/shape_image_actions_bg"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

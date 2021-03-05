@@ -14,7 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.addphoto.AddPhotoActivity">
+        tools:context=".ui.addImage.AddImageActivity">
 
         <com.minaroid.photoweather.customviews.CenteredTitleToolbar
             android:id="@+id/toolbar"

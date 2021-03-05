@@ -19,4 +19,7 @@ interface ImagesDao {
 
     @Query("Delete from images_table WHERE id = :id")
     fun deleteImageById(id: Long): Single<Int>
+
+    @Query("select * from images_table WHERE id = :id")
+    fun getImageById(id: Long): Single<ImageEntity>
 }

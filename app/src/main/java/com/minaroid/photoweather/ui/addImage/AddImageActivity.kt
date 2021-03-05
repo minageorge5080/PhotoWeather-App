@@ -1,6 +1,7 @@
-package com.minaroid.photoweather.ui.addphoto
+package com.minaroid.photoweather.ui.addImage
 
 import android.Manifest
+import android.content.Intent
 import android.location.Location
 import android.net.Uri
 import android.view.View
@@ -11,14 +12,15 @@ import com.minaroid.photoweather.databinding.ActivityAddPhotoBinding
 import com.minaroid.photoweather.helpers.LocationManagerCallBack
 import com.minaroid.photoweather.helpers.LocationManager
 import com.minaroid.photoweather.ui.base.BaseActivity
+import com.minaroid.photoweather.ui.imagepreview.ImagePreviewActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
+class AddImageActivity : BaseActivity(), LocationManagerCallBack {
 
-    private val viewModel: AddPhotoViewModel by viewModels()
+    private val viewModel: AddImageViewModel by viewModels()
     private lateinit var binding: ActivityAddPhotoBinding
     private var locationManager: LocationManager? = null
 
@@ -42,6 +44,14 @@ class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
         viewModel.weatherLiveData.observe(this, Observer {
             binding.weatherModel = it
         })
+        viewModel.imageAddedLiveData.observe(this, Observer {
+            it?.let {
+                val previewIntent = Intent(this, ImagePreviewActivity::class.java)
+                previewIntent.putExtra(ImagePreviewActivity.IMAGE_KEY,it)
+                startActivity(previewIntent)
+                finish()
+            }
+        })
     }
 
     override fun loadData() {
@@ -61,7 +71,7 @@ class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
                     if (it) {
                         locationManager =
                             LocationManager(
-                                this@AddPhotoActivity,
+                                this@AddImageActivity,
                                 this
                             )
                         locationManager?.startLocationUpdates()
@@ -80,7 +90,7 @@ class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
         }
     }
 
-    fun onSaveClicked() {
+    fun onSaveClicked(view: View) {
         viewModel.saveImage(binding.imageContainer)
     }
 

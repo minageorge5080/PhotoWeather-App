@@ -31,7 +31,12 @@
         </activity>
 
         <activity
-            android:name=".ui.addphoto.AddPhotoActivity"
+            android:name=".ui.addImage.AddImageActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ui.home.HomeActivity"/>
+
+        <activity
+            android:name=".ui.imagepreview.ImagePreviewActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".ui.home.HomeActivity"/>
 

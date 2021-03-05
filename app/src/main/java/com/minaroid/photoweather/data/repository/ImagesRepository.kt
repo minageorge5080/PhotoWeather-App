@@ -20,6 +20,11 @@ class ImagesRepository @Inject constructor(
         return photoWeatherDB.getImageDao().deleteImageById(model.id)
     }
 
+    fun getImage(id: Long): Single<ImageModel> {
+        return photoWeatherDB.getImageDao().getImageById(id)
+            .map{imageMapper.toImageModel(it)}
+    }
+
     fun getAllImages(): Flowable<List<ImageModel>> {
         return photoWeatherDB.getImageDao().getAllImages().map {
             it.map { imageMapper.toImageModel(it) }

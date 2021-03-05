@@ -1,4 +1,4 @@
-package com.minaroid.photoweather.ui.home
+package com.minaroid.photoweather.ui.imagepreview
 
 import androidx.lifecycle.MutableLiveData
 import com.minaroid.photoweather.data.models.image.ImageModel
@@ -12,20 +12,19 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val imagesRepository: ImagesRepository) : BaseViewModel() {
+class ImagePreviewViewModel @Inject constructor(private val imagesRepository: ImagesRepository) :
+    BaseViewModel() {
 
-    val imagesLiveData = MutableLiveData<List<ImageModel>>()
-
-    init {
-        getAllImages()
-    }
-
-    private fun getAllImages() {
-        addToDisposable(imagesRepository.getAllImages()
+    fun deleteImage(image: ImageModel) {
+        addToDisposable(imagesRepository.deleteImage(image)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ imagesLiveData.value = it }, Timber::e)
+            .doOnSubscribe { loadingLiveData.value = true }
+            .doFinally { loadingLiveData.value = false }
+            .subscribe({
+                FileHelper.deleteImage(image.path)
+                finishScreenLiveData.value = true
+            }, Timber::e)
         )
     }
-
 }

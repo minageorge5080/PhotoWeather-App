@@ -1,4 +1,4 @@
-package com.minaroid.photoweather.ui.addphoto
+package com.minaroid.photoweather.ui.addImage
 
 import android.location.Location
 import android.view.View
@@ -18,12 +18,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AddPhotoViewModel @Inject constructor(
+class AddImageViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
     private val imagesRepository: ImagesRepository
 ) : BaseViewModel() {
 
     val weatherLiveData = MutableLiveData<WeatherModel>()
+    val imageAddedLiveData = MutableLiveData<ImageModel>()
 
     fun getWeatherData(location: Location) {
         addToDisposable(weatherRepository.getCurrentWeather(location.latitude, location.longitude)
@@ -43,12 +44,13 @@ class AddPhotoViewModel @Inject constructor(
                 .map { it.drawToBitmap() }
                 .map { FileHelper.saveBitmap(it) }
                 .flatMap { imagesRepository.insertImage(ImageModel(0, it)) }
+                .flatMap { imagesRepository.getImage(it) }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { loadingLiveData.value = true }
                 .doFinally { loadingLiveData.value = false }
                 .subscribe({
-                    finishScreenLiveData.value = true
+                    imageAddedLiveData.value = it
                 }, Timber::e)
         )
     }
