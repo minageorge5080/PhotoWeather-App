@@ -16,7 +16,7 @@ All pull requests are welcome, make sure to follow the contribution guidelines w
 4. Add your changes to the index: `git add .`
 5. Commit your changes: `git commit -m 'Add some feature'`
 6. Push to the branch: `git push origin my-new-feature`
-7. Submit a pull request against the `development` branch
+7. Submit a pull request against the `main` branch
 
 ### License
 ```
