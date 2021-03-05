@@ -31,9 +31,17 @@ class HomeActivity : BaseActivity() {
     private lateinit var binding: ActivityHomeBinding
     private val pickerSelectedPaths: MutableList<Uri> = ArrayList()
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                uiHelper.showSuccessMsg("DONE")
+                result.data?.getParcelableArrayListExtra<Uri>(FilePickerConst.KEY_SELECTED_MEDIA)
+                    ?.let {
+                        if (it.isNotEmpty()) {
+                            val addPhotoIntent = Intent(this, AddPhotoActivity::class.java)
+                            addPhotoIntent.putExtra(AddPhotoActivity.IMAGE_PATH_KEY, it[0])
+                            startActivity(addPhotoIntent)
+                        }
+                    }
             }
         }
 
@@ -76,6 +84,5 @@ class HomeActivity : BaseActivity() {
     }
 
     override fun loadData() {
-//        viewModel.getWeatherData()
     }
 }

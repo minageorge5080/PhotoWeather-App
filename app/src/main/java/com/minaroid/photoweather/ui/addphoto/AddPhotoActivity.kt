@@ -1,29 +1,33 @@
 package com.minaroid.photoweather.ui.addphoto
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
+import android.location.Location
 import android.net.Uri
+import android.provider.MediaStore
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.drawToBitmap
+import androidx.lifecycle.Observer
 import com.minaroid.photoweather.R
 import com.minaroid.photoweather.databinding.ActivityAddPhotoBinding
+import com.minaroid.photoweather.helpers.FileHelper
+import com.minaroid.photoweather.helpers.LocationManagerCallBack
+import com.minaroid.photoweather.helpers.timber.LocationManager
 import com.minaroid.photoweather.ui.base.BaseActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.hilt.android.AndroidEntryPoint
-import droidninja.filepicker.FilePickerBuilder
-import droidninja.filepicker.FilePickerConst
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
-class AddPhotoActivity : BaseActivity() {
+class AddPhotoActivity : BaseActivity(), LocationManagerCallBack {
 
     private val viewModel: AddPhotoViewModel by viewModels()
     private lateinit var binding: ActivityAddPhotoBinding
-    private val pickerSelectedPaths: MutableList<Uri> = ArrayList()
-    private val disposable = CompositeDisposable()
+    private var locationManager: LocationManager? = null
 
     override fun getLayoutView(): View {
         binding = ActivityAddPhotoBinding.inflate(layoutInflater)
@@ -31,48 +35,61 @@ class AddPhotoActivity : BaseActivity() {
     }
 
     override fun initViews() {
-
+        binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_back)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        intent.getParcelableExtra<Uri>(IMAGE_PATH_KEY)?.let {
+            binding.imageView.setImageURI(it)
+        }
     }
 
     override fun initViewModel() {
-        openImagePicker()
+        subscribeToViewModelObservables(viewModel)
+        viewModel.weatherLiveData.observe(this, Observer {
+            binding.weatherModel = it
+        })
     }
 
     override fun loadData() {
-
+        if (viewModel.weatherLiveData.value == null) {
+            getCurrentLocation()
+        }
     }
 
-    private fun openImagePicker() {
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    uiHelper.showSuccessMsg("DONE")
-                }
-            }
-
-        disposable.add(
+    private fun getCurrentLocation() {
+        addToDisposable(
             RxPermissions(this)
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .request(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
                 .subscribe({
                     if (it) {
-                        val intent = FilePickerBuilder.instance
-                            .setMaxCount(1)
-                            .setSelectedFiles(pickerSelectedPaths as java.util.ArrayList<Uri>)
-                            .setActivityTitle(getString(R.string.file_picker_label))
-                            .enableCameraSupport(true)
-                            .setActivityTheme(R.style.FilePickerTheme)
-                            .showFolderView(false)
-                            .enableImagePicker(true)
-                            .build(FilePickerConst.MEDIA_PICKER, this)
-                        resultLauncher.launch(intent)
+                        locationManager = LocationManager(this@AddPhotoActivity, this)
+                        locationManager?.startLocationUpdates()
+                        uiHelper.showLoading()
+                    } else {
+                        uiHelper.showErrorMsg(getString(R.string.msg_location_permission))
                     }
                 }, Timber::e)
         )
+    }
 
+    override fun onLocationRetrieved(location: Location?) {
+        location?.let {
+            locationManager?.stopLocationUpdates()
+            viewModel.getWeatherData(it)
+        }
+    }
+
+    fun onSaveClicked(view: View) {
+        viewModel.saveImage(binding.imageContainer)
     }
 
     companion object {
-
-        private const val REQUEST_CODE_PICKER = 130
-
+        const val IMAGE_PATH_KEY = "image_path"
     }
+
+
 }

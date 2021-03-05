@@ -1,17 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.addphoto.AddPhotoActivity">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="weatherModel"
+            type="com.minaroid.photoweather.data.models.weather.WeatherModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:context=".ui.addphoto.AddPhotoActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.minaroid.photoweather.customviews.CenteredTitleToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:centerTitle="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/add_photo" />
+
+        <FrameLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:visibility="visible"
+                android:padding="@dimen/padding_medium"
+                android:visibility="@{weatherModel==null ? View.GONE : View.VISIBLE , default = gone}"
+                android:layout_gravity="bottom"
+                android:background="@drawable/weather_details_bg">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/textSizeHeadline5"
+                    tools:text="El Maddi, EG"
+                    android:textStyle="bold"
+                    android:text="@{weatherModel.locationName +`, `+ weatherModel.country }"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    app:drawableStartCompat="@drawable/ic_thermometer"
+                    android:textSize="@dimen/textSizeHeadline5"
+                    tools:text="El Maddi, EG"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:text="@{weatherModel.temp +` °C` +` - ` + weatherModel.status}"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/address"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save_image"
+            android:textAllCaps="false"
+            tools:visibility="visible"
+            android:visibility="@{weatherModel==null ? View.GONE : View.VISIBLE , default = gone}"
+            android:textColor="@color/white"
+            android:paddingTop="@dimen/padding_micro"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_micro"
+            android:onClick="onSaveClicked"
+            android:paddingEnd="@dimen/padding_medium"
+            android:drawablePadding="@dimen/padding_micro"
+            android:background="@drawable/save_image_btn_bg"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:drawableEnd="@drawable/next_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageContainer"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

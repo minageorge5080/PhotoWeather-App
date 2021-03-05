@@ -4,5 +4,8 @@
     <string name="msg_internal_error">An error occur try again later</string>
     <string name="msg_connection_error">please check your connection</string>
     <string name="file_picker_label">Photos</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="msg_location_permission">You should enable location permission</string>
+    <string name="btn_save_image">Save Image</string>
 
 </resources>

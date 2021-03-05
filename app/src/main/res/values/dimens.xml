@@ -7,7 +7,6 @@
     <dimen name="margin_micro">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_extra">24dp</dimen>
-    <dimen name="margin_above_extra">32dp</dimen>
     <dimen name="margin_ultimate">48dp</dimen>
     <dimen name="margin_ultimate_triple_plus">75dp</dimen>
 

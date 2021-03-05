@@ -10,7 +10,7 @@ class WeatherMapper @Inject constructor() {
             response.name,
             response.sys.country,
             response.main.temp,
-            response.weather.main
+            response.weather[0].description
         )
     }
 }
